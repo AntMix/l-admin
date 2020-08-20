@@ -1,0 +1,40 @@
+/* 橙 orange_theme */
+
+.admin.orange_theme .menu-left .admin-nav .layui-nav-bar {
+    background: #FF4806;
+}
+
+.admin.orange_theme .menu-left .admin-nav .layui-nav-item.layui-this a {
+    background: #FF4806;
+}
+
+.admin.orange_theme .menu-left .admin-nav .layui-nav-item .layui-nav-child .layui-this a {
+    background: #FF4806;
+}
+
+.admin.orange_theme .tab-list .admin-tabs-control:hover, .admin.orange_theme .tab-list .layui-tab-title li.layui-this {
+    color: #FF4806;
+}
+.admin.orange_theme .admin-refresh :hover{
+    color :#FF4806;
+}
+/* 蓝 blue_theme */
+
+.admin.blue_theme .menu-left .admin-nav .layui-nav-bar {
+    background: #2D8CF0;
+}
+
+.admin.blue_theme .menu-left .admin-nav .layui-nav-item.layui-this a {
+    background: #2D8CF0;
+}
+
+.admin.blue_theme .menu-left .admin-nav .layui-nav-item .layui-nav-child .layui-this a {
+    background: #2D8CF0;
+}
+
+.admin.blue_theme .tab-list .admin-tabs-control:hover, .admin.blue_theme .tab-list .layui-tab-title li.layui-this {
+    color: #2D8CF0;
+}
+.admin.blue_theme .admin-refresh :hover{
+    color :#2D8CF0;
+}

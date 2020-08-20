@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台</title>
+    <script rel="preload" type="text/javascript" src="/static/layui/layui.js"></script>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/admin/common.css">
+    <script rel="preload" type="text/javascript" src="/static/admin/common.js"></script>
+    <script rel="preload" type="text/javascript" src="/static/js/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="page-content">
+        <form class="layui-form" id="form" lay-filter="form">
+            <input type="hidden" name="id" id="dataId" readonly class="layui-input" value="">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="name" required class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">昵称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="nick" lay-verify="nick" required class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" id="pass" style="display: none;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-inline">
+                        <input type="password" name="password" required lay-verify="password" id="password"
+                            class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">确认密码</label>
+                    <div class="layui-input-inline">
+                        <input type="password" lay-verify="re_pass" required class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色</label>
+                <div class="layui-input-block" id="role">
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">手机</label>
+                <div class="layui-input-block">
+                    <input type="tel" name="phone" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-block">
+                    <input type="email" name="email" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="status" checked lay-skin="switch" value="1" lay-text="开启|关闭">
+                </div>
+            </div>
+
+            <button id="submit" class="layui-btn" lay-submit lay-filter="submit" style="display: none"></button>
+        </form>
+    </div>
+</body>
+<script src="/static/layui-plugins/xm-select.js"></script>
+<script>
+    const ID = getUrlParam('id')
+    layui.use(['kit', 'form'], function () {
+        const kit = layui.kit
+        const form = layui.form
+
+        if (ID) {
+            kit.get('./info', { id: ID }, { msg: false }).done((res) => {
+                form.val('form', res.data);
+            })
+            document.getElementById('pass').remove()
+        }
+        let selectIns = {};
+        kit.get('./role', { id: ID }, { msg: false }).done((res) => {
+            selectIns = xmSelect.render({
+                el: '#role',
+                tips: '请选择角色',
+                filterable: true,
+                searchTips: '输入搜索',
+                data: res.data.list,
+                initValue: res.data.checked
+            })
+        })
+        form.on('submit(submit)', function (data) {
+            data.field.role = selectIns.getValue('valueStr');
+            kit.post('./save', data.field).done(() => {
+                kit.closeLayer(window.name)
+            })
+            return false;
+        });
+        form.verify({
+            name: (value, item) => { //value：表单的值、item：表单的DOM对象
+                if (!new RegExp("^[a-zA-Z0-9_\S]+$").test(value)) {
+                    return '由英文字母下划线构成'
+                }
+                if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                    return '用户名首尾不能出现下划线\'_\''
+                }
+                if (/^\d+\d+\d$/.test(value)) {
+                    return '用户名不能全为数字'
+                }
+                if (value.length > 20) {
+                    return '用户名不能超过20个字符'
+                }
+            },
+            nick: (value, item) => {
+                if (value.length > 20) {
+                    return '用户名不能超过20个字符'
+                }
+            }, password: (value, item) => {
+                if (!/^[\S]{6,12}$/.test(value)) {
+                    return '密码必须6到12位，且不能出现空格'
+                }
+            }, re_pass: (value, item) => {
+                if (value != document.getElementById('password').value) {
+                    return '两次密码不一致'
+                }
+            }
+        });
+    });
+
+</script>
+</html>

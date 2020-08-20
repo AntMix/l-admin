@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script rel="preload" type="text/javascript" src="/static/layui/layui.js"></script>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/admin/common.css">
+    <script rel="preload" type="text/javascript" src="/static/admin/common.js"></script>
+    <script rel="preload" type="text/javascript" src="/static/js/jquery.min.js"></script>
+</head>
+
+<body>
+	<div class="page-content">
+		<!--模糊搜索区域-->
+		<div class="layui-row">
+			<form class="layui-form layui-col-md12 form-search">
+				<input type="text" class="layui-input" placeholder="ID" id="id" name="id">
+				<input type="text" class="layui-input" placeholder="用户名" id="name" name="name">
+				<input type="text" class="layui-input" placeholder="昵称" id="nick" name="nick">
+				<input type="text" class="layui-input" placeholder="手机号" id="phone" name="phone">
+				<input type="text" class="layui-input" placeholder="邮箱" id="email" name="email">
+				<input type="text" class="layui-input" placeholder="开始时间" id="startTime" name="start_time">
+				<input type="text" class="layui-input" placeholder="结束时间" id="endTime" name="end_time">
+				<span class="layui-btn" lay-submit lay-filter="search">
+					<i class="layui-icon layui-icon-search"></i>
+				</span>
+				<span class="layui-btn layui-btn-normal btn-add power-item" id="add" power="adminUser:add">
+					<i class="layui-icon layui-icon-add-1"></i>
+				</span>
+			</form>
+		</div>
+		<!--数据表格-->
+		<table class="layui-hide" id="tableId" lay-filter="tableId" style="color: #dadada4f"></table>
+	</div>
+</body>
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+		<div class="layui-btn-container">
+			<button class="layui-btn layui-btn-sm" lay-event="batchEnabled">批量启用</button>
+			<button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="batchDisabled">批量停用</button>
+			<button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDel">批量删除</button>
+		</div>
+	</script>
+<!-- 行工具栏模板 -->
+<script type="text/html" id="operationTpl">
+	<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+	<a class="layui-btn layui-btn-xs layui-btn-normal power-item" lay-event="changePassword" power="adminUser:changePassword">更改密码</a>
+</script>
+<!-- 启用|停用模板 -->
+<script type="text/html" id="statusTpl">
+	<input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="statusSwitch" {{ d.status == 1 ? 'checked' : '' }}>
+</script>
+<script>
+	layui.use(['kit', 'table', 'form', 'laydate'], function () {
+		const kit = layui.kit
+		const table = layui.table
+		const form = layui.form
+		const laydate = layui.laydate
+
+		laydate.render({ elem: '#startTime', type: 'datetime', trigger: 'click' })
+		laydate.render({ elem: '#endTime', type: 'datetime', trigger: 'click' })
+
+		let tableIns = table.render({
+			elem: '#tableId',
+			url: './list',
+			limit: 10,
+			page: true,
+			toolbar: '#toolbarTpl',
+			cols: [[
+				{ type: 'checkbox', fixed: 'left' },
+				{ field: 'id', title: 'ID', width: 80, sort: true },
+				{ field: 'name', title: '姓名' },
+				{ field: 'nick', title: '昵称' },
+				{ field: 'role', title: '角色', templet: '#roleTpl' },
+				{ field: 'status', title: '状态', width: 100, templet: '#statusTpl' },
+				{ field: 'phone', title: '手机' },
+				{ field: 'email', title: '邮箱' },
+				{ field: 'create_time', title: '创建时间', width: 160, templet: "<div>{{layui.kit.toDateTime(d.create_time)}}</div>" },
+				{ field: 'update_time', title: '更新时间', width: 160, templet: "<div>{{layui.kit.toDateTime(d.update_time)}}</div>" },
+				{ title: '操作', width: 200, align: 'center', fixed: 'right', templet: '#operationTpl' }
+			]],
+			done: () => { initPower() },
+		})
+
+		table.on('tool(tableId)', function (obj) {
+			let data = obj.data
+			switch (obj.event) {
+				case 'edit':
+					edit('编辑', './edit?id=' + data.id)
+					break
+				case 'del':
+					kit.confirm(`确认删除 ${data.id}-${data.name}？`, './delete', { id: data.id }, obj)
+					break
+				case 'changePassword':
+					layer.prompt({title : '请输入新密码'}, function (value, index, elem) {
+						kit.post('./changePassword', {id : data.id, password : value}).done(() => {
+							layer.close(index);
+						})
+					});
+					break
+			}
+		})
+		document.getElementById('add').addEventListener('click', () => {
+			edit('新增', './edit')
+		})
+		function edit(title, url) {
+			kit.edit(title, url, (iframe) => {
+				tableIns.reload()
+			})
+		}
+
+		form.on('submit(search)', function (data) {
+			tableIns.reload({
+				where: data.field,
+				page: { curr: 1 }
+			})
+			return false
+		})
+
+		form.on('switch(statusSwitch)', (obj) => {
+			kit.formSwitch('./changeStatus', { id: obj.value }, obj)
+		})
+
+		table.on('toolbar(tableId)', function (obj) {
+			let data = obj.data
+			switch (obj.event) {
+				case 'batchEnabled':
+					batchEnabled()
+					break
+				case 'batchDisabled':
+					batchDisabled()
+					break
+				case 'batchDel':
+					batchDel()
+					break
+			}
+		})
+		function batchEnabled() {
+			kit.batchConfirm('确定要批量启用吗？', './batchEnable', {}, tableIns, () => { tableIns.reload() })
+		}
+
+		function batchDisabled() {
+			kit.batchConfirm('确定要批量停用吗？', './batchDisabled', {}, tableIns, () => { tableIns.reload() })
+		}
+
+		function batchDel() {
+			kit.batchConfirm('确定要批量删除吗？', './batchDel', {}, tableIns, () => { tableIns.reload() })
+		}
+	})
+</script>
+</html>

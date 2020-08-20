@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台</title>
+    <script rel="preload" type="text/javascript" src="/static/layui/layui.js"></script>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/admin/common.css">
+    <script rel="preload" type="text/javascript" src="/static/admin/common.js"></script>
+    <script rel="preload" type="text/javascript" src="/static/js/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="page-content">
+        <form class="layui-form" id="form" lay-filter="form">
+            <input type="hidden" name="id" id="dataId" readonly class="layui-input" value="">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限列表</label>
+                <div class="layui-input-block dtree" id="power" data-id="0">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="status" checked lay-skin="switch" value="1" lay-text="开启|关闭">
+                </div>
+            </div>
+
+            <button id="submit" class="layui-btn" lay-submit lay-filter="submit" style="display: none"></button>
+        </form>
+    </div>
+</body>
+<link rel="stylesheet" href="/static/layui-plugins/dtree/font/dtreefont.css">
+<link rel="stylesheet" href="/static/layui-plugins/dtree/dtree.css">
+
+<script>
+    const ID = getUrlParam('id')
+    layui.use(['kit', 'form', 'dtree'], function () {
+        const kit = layui.kit
+        const form = layui.form
+        const dtree = layui.dtree
+        const powerId = 'power'
+
+        if (ID) {
+            kit.get('./info', { id: ID }, { msg: false }).done((res) => {
+                form.val('form', res.data);
+            })
+        }
+        kit.get('./power', { id: ID }, { msg: false }).done((res) => {
+            res.data.list.forEach(v => {
+                if (v.icon === '') {
+                    if (v.is_menu !== 0) {
+                        v.icon = window.config.defaultIcon
+                    } else {
+                        v.icon = 'layui-icon-subtraction'
+                    }
+                }
+                v.icon = 'layui-icon ' + v.icon
+                v.checkArr = { type: 0, checked: 0 };
+            });
+            let elementId = ''
+            let dtreeObj = dtree.render({
+                elem: '#' + powerId,
+                data: res.data.list,
+                dataStyle: 'layuiStyle',
+                dataFormat: "list",
+                initLevel: 5,
+                response: { message: 'msg', statusCode: 0, parentId: 'pid', title: 'name', iconClass: 'icon' },
+                checkbar: true,
+                checkbarType: "self",
+                menubar: true,
+                menubarTips: {
+                    group: ['moveDown', 'moveUp', 'refresh', 'checkAll', 'unCheckAll', 'invertAll']
+                },
+                skin: 'laySimple',
+                done: function (result, $ul, first) {
+                    if (first) {
+                        dtree.chooseDataInit(powerId, res.data.checked.join(','))
+                    }
+                }
+            });
+            // 绑定节点点击事件
+            dtree.on('node(' + powerId + ')', function (obj) {
+                dtreeObj.clickNodeCheckbar(obj.param.nodeId);// 点击节点选中复选框
+            });
+        })
+        form.on('submit(submit)', function (data) {
+            let powerArr = dtree.getCheckbarNodesParam(powerId);
+            let ids = powerArr.map(item => item.nodeId)
+            data.field.power = ids.join(',')
+            kit.post('./save', data.field).done(() => {
+                kit.closeLayer(window.name)
+            })
+            return false;
+        });
+    });
+
+</script>
+</html>

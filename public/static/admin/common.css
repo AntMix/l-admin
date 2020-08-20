@@ -1,0 +1,164 @@
+body {
+    padding: 2px 0 0 0;
+}
+
+.page-content {
+    padding: 5px;
+}
+
+.form-search {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.form-search .layui-input {
+    width: 200px;
+    margin: 0 0px 5px 10px;
+}
+
+.form-search .layui-btn {
+    margin-left: 10px
+}
+
+@media screen and (max-width:768px) {
+    .form-search .layui-input {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 10px
+    }
+    .form-search .layui-btn {
+        margin-left: 0;
+        margin-top: 10px
+    }
+}
+
+.btn-add {
+    position: fixed;
+    right: 0;
+}
+
+.layui-tab-close {
+    border-radius: 20px;
+}
+
+.power-item {
+    display: none;
+}
+
+/*  */
+
+.btn-upload-img {
+    margin-left: 10px;
+    margin-top: 40px;
+}
+
+.btn-upload-img-list {
+}
+
+.image-list {
+    position: relative;
+    margin: 10px auto;
+    min-height: 110px;
+}
+
+.image-item{
+    width: 150px;
+    height: 113px;
+}
+
+.image-list li {
+    margin-bottom: 5px;
+    margin-right: 10px;
+    width: 150px;
+    height: 113px;
+    list-style: none;
+    list-style-type: none;
+    display: inline-block;
+    position: absolute;
+}
+
+.image-list li:hover {
+    border-color: #9a9fa4;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.85);
+}
+
+.image-list .active {
+    border: 1px dashed red;
+}
+
+.title_cover {
+    height: 30px;
+    background-color: rgba(0, 0, 0, .5);
+    position: absolute;
+    bottom: 0;
+    width: 140px;
+    color: #fff;
+    line-height: 30px;
+    font-size: 14px;
+    padding-left: 10px;
+    overflow: hidden;
+    /*超出部分隐藏*/
+    white-space: nowrap;
+    /*不换行*/
+    text-overflow: ellipsis;
+    /*超出部分文字以...显示*/
+}
+
+.title_cover:hover {
+    cursor: pointer;
+}
+
+.img_close {
+    height: 20px;
+    background-color: rgba(0, 0, 0, .5);
+    position: absolute;
+    top: 0;
+    right: 0px;
+    width: 20px;
+    color: #fff;
+    line-height: 18px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.img_close:hover {
+    cursor: pointer;
+}
+
+.img_edit {
+    height: 20px;
+    background-color: rgba(0, 0, 0, .5);
+    position: absolute;
+    top: 0;
+    left: 0px;
+    width: 20px;
+    color: #fff;
+    line-height: 18px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.img_edit:hover {
+    cursor: pointer;
+}
+.img-edit-src{
+    height: 20px;
+    background-color: rgba(0, 0, 0, .5);
+    position: absolute;
+    top: 0;
+    left: 22px;
+    width: 20px;
+    color: #fff;
+    line-height: 18px;
+    font-size: 14px;
+    text-align: center;
+}
+.img-edit-src:hover {
+    cursor: pointer;
+}
+.layui-btn.icon-btn {
+    padding: 0 10px;
+}
+
+/*  */

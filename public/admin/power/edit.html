@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台</title>
+    <script rel="preload" type="text/javascript" src="/static/layui/layui.js"></script>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/admin/common.css">
+    <script rel="preload" type="text/javascript" src="/static/admin/common.js"></script>
+    <script rel="preload" type="text/javascript" src="/static/js/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="page-content">
+        <form class="layui-form" id="form" lay-filter="form">
+            <input type="hidden" name="id" id="dataId" readonly class="layui-input" value="">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">控制器</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" name="con" lay-verify="path" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">方法</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="func" lay-verify="path" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">父级</label>
+                <div class="layui-input-block">
+                    <div id="pid" class="xm-select-demo"></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">页面标识</label>
+                <div class="layui-input-block">
+                    <input type="text" name="sign" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图标</label>
+                <div class="layui-input-block">
+                    <input type="text" id="icon" name="icon" lay-filter="icon" value="" style="display:none;">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否为菜单</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="is_menu" checked lay-skin="switch" value="1" lay-text="是|否">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="status" checked lay-skin="switch" value="1" lay-text="开启|关闭">
+                </div>
+            </div>
+
+            <button id="submit" class="layui-btn" lay-submit lay-filter="submit" style="display: none"></button>
+        </form>
+    </div>
+</body>
+<script src="/static/layui-plugins/xm-select.js"></script>
+<script>
+    const ID = getUrlParam('id')
+    const PID = getUrlParam('pid')
+    layui.use(['kit', 'form', 'iconPicker'], function () {
+        const kit = layui.kit
+        const form = layui.form
+        const iconPicker = layui.iconPicker
+
+        iconPicker.render({
+            elem: '#icon',
+            type: 'fontClass',
+            search: true,
+            page: false
+        });
+        let selectIns = {}
+        kit.get('./list?is_menu=1&children=1', {}, { msg: false }).done((res) => {
+            selectIns = xmSelect.render({
+                el: '#pid',
+                tips: '请选择父级',
+                filterable: true,
+                searchTips: '输入搜索',
+                data: res.data,
+                prop: {
+                    name: 'name',
+                    value: 'id',
+                },
+                initValue: res.data.checked,
+                model: { label: { type: 'text' } },
+                radio: true,
+                clickClose: true,
+                tree: {
+                    show: true,
+                    strict: false,
+                    expandedKeys: true,
+                },
+            })
+            if (ID) {
+                kit.get('./info', { id: ID }, { msg: false }).done((res) => {
+                    iconPicker.checkIcon('icon', res.data.icon);
+                    form.val('form', res.data);
+                    res.data.pid && selectIns.setValue([res.data.pid])
+                })
+            }
+        })
+
+        form.on('submit(submit)', function (data) {
+            data.field.pid = selectIns.getValue('valueStr');
+            kit.post('./save', data.field).done(() => {
+                kit.closeLayer(window.name)
+            })
+            return false;
+        });
+    });
+
+</script>
+</html>
