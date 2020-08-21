@@ -96,8 +96,7 @@ class Power extends Base
         $id = $this->request->post('id');
         $data = [
             'name' => $this->request->post('name'),
-            'con' => $this->request->post('con'),
-            'func' => $this->request->post('func'),
+            'path' => $this->request->post('path'),
             'pid' => $this->request->post('pid'),
             'icon' => $this->request->post('icon'),
             'sign' => $this->request->post('sign'),
