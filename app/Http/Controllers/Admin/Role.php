@@ -8,14 +8,14 @@ class Role extends Base
 {
     public function list()
     {
-        $page = $this->request->get('page');
         $limit = $this->request->get('limit');
         $where = [];
         $id = $this->request->get('id');
         $name = $this->request->get('name');
         $name && $where = ['name' => ['like', "%$name%"]];
         $id && $where = ['id' => $id];
-        $data = DB::table('admin_role')->where($where)->page($page)->paginate($limit)->toArray();
+        $data = DB::table('admin_role')->where($where)->paginate($limit);
+        $data = $this->toArray($data);
         $this->success($data);
     }
 

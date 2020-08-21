@@ -72,4 +72,9 @@ class Controller extends BaseController
         }
         $this->response(400, $dataOrMsg, $msg);
     }
+
+    public function toArray($data, $options = 0)
+    {
+        return json_decode(json_encode($data, $options));
+    }
 }

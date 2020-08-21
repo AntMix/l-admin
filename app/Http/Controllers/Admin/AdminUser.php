@@ -10,7 +10,6 @@ class AdminUser extends Base
 {
     public function list()
     {
-        $page = $this->request->get('page');
         $limit = $this->request->get('limit');
         $id = $this->request->get('id');
         $name = $this->request->get('name');
@@ -28,7 +27,7 @@ class AdminUser extends Base
         $queryTime && $where[] = $queryTime;
         $id && $where = ['id' => $id];
         $data = DB::table('admin_user')->where($where)->paginate($limit);
-        $data = json_decode(json_encode($data), true);
+        $data = $this->toArray($data);
         foreach ($data['data'] as &$value) {
             $value['role'] = DB::table('admin_role_user as ru')->join('admin_role as r', 'ru.role_id', '=', 'r.id', 'left')->where('ru.uid', $value['id'])->pluck('r.name')->toArray();
             $value['role'] = $value['role'] ? implode(' | ', $value['role']) : '';
