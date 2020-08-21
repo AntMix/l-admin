@@ -33,7 +33,7 @@ class Role extends Base
     {
         $id = $this->request->get('id');
         $data = [];
-        $data['list'] = DB::table('admin_power')->field('id,name,pid,icon,is_menu')->where('status', 1)->select();
+        $data['list'] = DB::table('admin_power')->where('status', 1)->select(['id','name','pid','icon','is_menu'])->get()->toArray();
         $data['checked'] = DB::table('admin_role_power')->where('role_id', $id)->pluck('power_id');
         $this->success($data);
     }

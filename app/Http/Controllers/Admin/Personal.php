@@ -34,7 +34,7 @@ class Personal extends Base
 
     public function changePassword()
     {
-        $user = DB::table('admin_user')->where('id', $this->uid)->field('password')->first();
+        $user = DB::table('admin_user')->where('id', $this->uid)->first('password');
         if (!$user) {
             return $this->error('没有查询到此用户');
         }

@@ -21,6 +21,7 @@ class Controller extends BaseController
      */
     public function response($code = 0, $data = [], $msg = '')
     {
+        $data = (array)$data;
         if (!isset($data['total'])) {
             echo json_encode(['code' => $code, 'data' => $data, 'msg' => $msg]);
         } else {
@@ -75,6 +76,6 @@ class Controller extends BaseController
 
     public function toArray($data, $options = 0)
     {
-        return json_decode(json_encode($data, $options));
+        return json_decode(json_encode($data, $options), true);
     }
 }

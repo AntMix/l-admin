@@ -121,7 +121,7 @@ class AdminUser extends Base
     public function role()
     {
         $id = $this->request->get('id');
-        $data['list'] = DB::table('admin_role')->where('status', 1)->field('id as value, name')->select();
+        $data['list'] = DB::table('admin_role')->where('status', 1)->select('id as value', 'name')->get()->toArray();
         $data['checked'] = DB::table('admin_role_user')->where('uid', $id)->pluck('role_id');
         $this->success($data);
     }
