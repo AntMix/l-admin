@@ -58,7 +58,7 @@ body {
 .btn-add {
     position: absolute;
     right: 0;
-    bottom: 0;
+    bottom: 5px;
 }
 
 .layui-tab-close {
