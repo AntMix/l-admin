@@ -2,6 +2,28 @@ body {
     padding: 2px 0 0 0;
 }
 
+/* 滚动条样式 */
+
+::-webkit-scrollbar {
+    /* 垂直 */
+    width: 8px;
+    /* 水平 */
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: #dbdbdb;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #bbbbbb;
+}
+
+::-webkit-scrollbar-track {
+    display: none;
+}
+
 .page-content {
     padding: 5px;
 }
@@ -54,8 +76,7 @@ body {
     margin-top: 40px;
 }
 
-.btn-upload-img-list {
-}
+.btn-upload-img-list {}
 
 .image-list {
     position: relative;
@@ -63,7 +84,7 @@ body {
     min-height: 110px;
 }
 
-.image-item{
+.image-item {
     width: 150px;
     height: 113px;
 }
@@ -143,7 +164,8 @@ body {
 .img_edit:hover {
     cursor: pointer;
 }
-.img-edit-src{
+
+.img-edit-src {
     height: 20px;
     background-color: rgba(0, 0, 0, .5);
     position: absolute;
@@ -155,9 +177,11 @@ body {
     font-size: 14px;
     text-align: center;
 }
+
 .img-edit-src:hover {
     cursor: pointer;
 }
+
 .layui-btn.icon-btn {
     padding: 0 10px;
 }
