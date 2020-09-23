@@ -15,16 +15,16 @@ Route::post('power/changeIsMenu', 'Admin\Power@changeIsMenu');
 Route::post('power/save', 'Admin\Power@save');
 Route::post('power/delete', 'Admin\Power@delete');
 
-Route::get('admin_user/list', 'Admin\AdminUser@list');
-Route::get('admin_user/info', 'Admin\AdminUser@info');
-Route::post('admin_user/save', 'Admin\AdminUser@save');
-Route::post('admin_user/delete', 'Admin\AdminUser@delete');
-Route::get('admin_user/role', 'Admin\AdminUser@role');
-Route::post('admin_user/changeStatus', 'Admin\AdminUser@changeStatus');
-Route::post('admin_user/changePassword', 'Admin\AdminUser@changePassword');
-Route::post('admin_user/batchEnable', 'Admin\AdminUser@batchEnable');
-Route::post('admin_user/batchDisabled', 'Admin\AdminUser@batchDisabled');
-Route::post('admin_user/batchDel', 'Admin\AdminUser@batchDel');
+Route::get('admin_user/list', 'Admin\Admin@list');
+Route::get('admin_user/info', 'Admin\Admin@info');
+Route::post('admin_user/save', 'Admin\Admin@save');
+Route::post('admin_user/delete', 'Admin\Admin@delete');
+Route::get('admin_user/role', 'Admin\Admin@role');
+Route::post('admin_user/changeStatus', 'Admin\Admin@changeStatus');
+Route::post('admin_user/changePassword', 'Admin\Admin@changePassword');
+Route::post('admin_user/batchEnable', 'Admin\Admin@batchEnable');
+Route::post('admin_user/batchDisabled', 'Admin\Admin@batchDisabled');
+Route::post('admin_user/batchDel', 'Admin\Admin@batchDel');
 
 Route::get('personal/info', 'Admin\Personal@info');
 Route::post('personal/save', 'Admin\Personal@save');

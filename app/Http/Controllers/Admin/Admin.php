@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\DB;
 use App\Models\AdminAuth;
 use App\Lib\Util;
+use App\Models\AdminUser;
 
-class AdminUser extends Base
+class Admin extends Base
 {
     public function list()
     {
@@ -64,26 +65,26 @@ class AdminUser extends Base
             return $this->error('昵称格式错误');
         }
         $time = time();
-
-        DB::beginTransaction();
-        $res1 = $res2 = $res3 = false;
-        if ($id) {
-            $data['update_time'] = $time;
-            $res1 = DB::table('admin_user')->where('id', $id)->update($data);
-        } else {
-            $data['create_time'] = $time;
-            $data['password'] = AdminAuth::password($this->request->post('password'));
-            if (!$data['password']) {
-                return $this->error('密码格式错误');
-            }
-            $res1 = $id = DB::table('admin_user')->insertGetId($data);
+        if ($id == AdminUser::SUPER_ID && !$data['status']) {
+            return $this->error('无法修改管理员状态');
         }
-        if ($res1 !== false) {
-            if (!$role) {
-                $res2 = DB::table('admin_role_user')->where('uid', $id)->delete();
-                $res3 = true;
+        DB::beginTransaction();
+        try {
+            if ($id) {
+                $data['update_time'] = $time;
+                DB::table('admin_user')->where('id', $id)->update($data);
             } else {
-                $res2 = DB::table('admin_role_user')->where('uid', $id)->delete();
+                $data['create_time'] = $time;
+                $data['password'] = AdminAuth::password($this->request->post('password'));
+                if (!$data['password']) {
+                    return $this->error('密码格式错误');
+                }
+                $id = DB::table('admin_user')->insertGetId($data);
+            }
+            if (!$role) {
+                DB::table('admin_role_user')->where('uid', $id)->delete();
+            } else {
+                DB::table('admin_role_user')->where('uid', $id)->delete();
                 $rolePower = [];
                 foreach ($role as $value) {
                     $rolePower[] = [
@@ -91,15 +92,13 @@ class AdminUser extends Base
                         'role_id' => $value
                     ];
                 }
-                $res3 = DB::table('admin_role_user')->insert($rolePower);
+                DB::table('admin_role_user')->insert($rolePower);
             }
-        }
-        if ($res1 !== false && $res2 !== false && $res3 !== false) {
             DB::commit();
             return $this->success();
-        } else {
+        } catch (\Exception $e) {
             DB::rollback();
-            return $this->error();
+            return $this->error($e->getMessage());
         }
     }
 
@@ -129,6 +128,9 @@ class AdminUser extends Base
     public function changeStatus()
     {
         $id = $this->request->input('id');
+        if ($id == AdminUser::SUPER_ID) {
+            return $this->error('无法修改管理员状态');
+        }
         $res = DB::select("update admin_user set status=abs(status-1) where id = $id");
         if ($res !== false) {
             return $this->success();
@@ -164,7 +166,7 @@ class AdminUser extends Base
         if (!$ids) {
             return $this->error('操作失败 请选择数据');
         }
-        unset($ids[array_search(1, $ids)]);
+        unset($ids[array_search(AdminUser::SUPER_ID, $ids)]);
         $res = DB::table('admin_user')->whereIn('id', $ids)->update(['status' => 1]);
         if ($res !== false) {
             return $this->success();
@@ -180,7 +182,7 @@ class AdminUser extends Base
         if (!$ids) {
             return $this->error('操作失败 请选择数据');
         }
-        unset($ids[array_search(1, $ids)]);
+        unset($ids[array_search(AdminUser::SUPER_ID, $ids)]);
         $res = DB::table('admin_user')->whereIn('id', $ids)->update(['status' => 0]);
         if ($res !== false) {
             return $this->success();
@@ -196,7 +198,7 @@ class AdminUser extends Base
         if (!$ids) {
             return $this->error('操作失败 请选择数据');
         }
-        unset($ids[array_search(1, $ids)]);
+        unset($ids[array_search(AdminUser::SUPER_ID, $ids)]);
         $res = DB::table('admin_user')->whereIn('id', $ids)->update(['status' => -1]);
         if ($res !== false) {
             return $this->success();

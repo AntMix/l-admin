@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\AdminUser;
 use Illuminate\Support\Facades\DB;
 
 class Role extends Base
@@ -47,24 +48,22 @@ class Role extends Base
             'name' => $this->request->post('name'),
             'status' => $this->request->post('status', 0),
         ];
-        if ($id == 1 && $data['status'] == 0) {
+        if ($id == AdminUser::SUPER_ID && $data['status'] == 0) {
             return $this->error('无法变更超级管理员状态');
         }
         DB::beginTransaction();
-        $res1 = $res2 = $res3 = false;
-        if ($id) {
-            $data['update_time'] = time();
-            $res1 = DB::table('admin_role')->where('id', $id)->update($data);
-        } else {
-            $data['create_time'] = time();
-            $res1 = $id = DB::table('admin_role')->insertGetId($data);
-        }
-        if ($res1 !== false) {
-            if (!$power) {
-                $res2 = DB::table('admin_role_power')->where('role_id', $id)->delete();
-                $res3 = true;
+        try {
+            if ($id) {
+                $data['update_time'] = time();
+                DB::table('admin_role')->where('id', $id)->update($data);
             } else {
-                $res2 = DB::table('admin_role_power')->where('role_id', $id)->delete();
+                $data['create_time'] = time();
+                $id = DB::table('admin_role')->insertGetId($data);
+            }
+            if (!$power) {
+                DB::table('admin_role_power')->where('role_id', $id)->delete();
+            } else {
+                DB::table('admin_role_power')->where('role_id', $id)->delete();
                 $rolePower = [];
                 foreach ($power as $value) {
                     $rolePower[] = [
@@ -72,22 +71,20 @@ class Role extends Base
                         'power_id' => $value
                     ];
                 }
-                $res3 = DB::table('admin_role_power')->insert($rolePower);
+                DB::table('admin_role_power')->insert($rolePower);
             }
-        }
-        if ($res1 !== false && $res2 !== false && $res3 !== false) {
             DB::commit();
             return $this->success();
-        } else {
+        } catch (\Exception $e) {
             DB::rollback();
-            return $this->error();
+            return $this->error($e->getMessage());
         }
     }
 
     public function changeStatus()
     {
         $id = $this->request->input('id');
-        if ($id == 1) {
+        if ($id == AdminUser::SUPER_ID) {
             return $this->error('无法变更超级管理员状态');
         }
         $res = DB::select("update admin_role set status=abs(status-1) where id = $id");

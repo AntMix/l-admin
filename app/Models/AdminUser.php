@@ -8,6 +8,7 @@ class AdminUser extends Model
 {
     protected $table = 'admin_user';
 
+    public const SUPER_ID = 1;
     public static $normal = ['status' => 1];
 
     public static function getNormalUser($id, $field = '*')

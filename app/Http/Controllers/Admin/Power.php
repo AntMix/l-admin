@@ -83,6 +83,10 @@ class Power extends Base
     public function changeIsMenu()
     {
         $id = $this->request->input('id');
+        $item = Db::table('admin_power')->find($id);
+        if (!$item->path) {
+            return $this->error('没有设置路径');
+        }
         $res = DB::select("update admin_power set is_menu=abs(is_menu-1) where id = $id");
         if ($res !== false) {
             return $this->success();
@@ -97,9 +101,9 @@ class Power extends Base
         $data = [
             'name' => $this->request->post('name'),
             'path' => $this->request->post('path'),
-            'pid' => $this->request->post('pid'),
+            'pid' => $this->request->post('pid') ?: 0,
             'icon' => $this->request->post('icon'),
-            'sign' => $this->request->post('sign'),
+            'sign' => $this->request->post('sign') ?: '',
             'is_menu' => $this->request->post('is_menu', 0),
             'status' => $this->request->post('status', 0)
         ];
@@ -108,6 +112,9 @@ class Power extends Base
             if (!$parent) {
                 return $this->error();
             }
+        }
+        if ($data['is_menu'] && !$data['path']) {
+            return $this->error('没有设置路径');
         }
         if ($id) {
             $data['update_time'] = time();
@@ -133,23 +140,24 @@ class Power extends Base
             return $this->error('没有此记录');
         }
         DB::beginTransaction();
-        $res = DB::table('admin_power')->where(['id' => $id])->update($update);
-        if ($res !== false) {
+        try {
+            DB::table('admin_power')->where(['id' => $id])->update($update);
             $children = [];
             $pid = [$id];
             while (true) {
                 $children = DB::table('admin_power')->whereIn('pid', $pid)->pluck('id');
                 if (!$children) {
-                    DB::commit();
-                    return $this->success();
+                    break;
                 } else {
                     $pid = $children;
                     DB::table('admin_power')->whereIn('id', $children)->update($update);
                 }
             }
-        } else {
+            DB::commit();
+            return $this->success();
+        } catch (\Exception $e) {
             DB::rollback();
-            return $this->error();
+            return $this->error($e->getMessage());
         }
     }
 }
