@@ -237,10 +237,13 @@ layui.use(['element', 'layer', 'tabList', 'kit','contextMenu'], function () {
     */
    $('#logout').click(function () {
       layer.confirm('确定要退出吗？', function (index) {
-         tabList.removeTabStorage(function (res) {
-            tabList.removeTabStorage()
-            window.location = window.config.loginPage
-         })
+         $.get(window.config.logoutPage, {}, (res) => {
+            tabList.removeTabStorage(function (res) {
+               tabList.removeTabStorage()
+               localStorage.removeItem(window.config.localUserKey)
+               window.location = window.config.loginPage
+            })
+         }, 'json');
       })
    })
 })

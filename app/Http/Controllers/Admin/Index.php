@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Model\AdminAuth;
+use App\Models\AdminAuth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 
 class Index extends Base
 {

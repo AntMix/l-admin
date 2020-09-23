@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::redirect('auth/login', 'auth/login')->name('adminLogin');
 Route::post('auth/doLogin', 'Admin\Auth@doLogin');
+Route::get('auth/logout', 'Admin\Auth@logout');
 
 Route::get('index/menu', 'Admin\Index@menu');
 

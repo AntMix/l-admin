@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
 use Illuminate\Support\Facades\Cookie;
-use App\Model\AdminUser;
+use App\Models\AdminUser;
 use App\Lib\JWT;
 use DB;
 use Request;
@@ -62,8 +62,13 @@ class AdminAuth
             'uid' => $user['id']
         ]);
         // cookie($name, $value, $minutes, $path, $domain, $secure, $httpOnly)
-        Cookie::queue(self::COOKIE_NAME, $token, $expire, '/', '', false, false);
+        Cookie::queue(self::COOKIE_NAME, $token, $expire / 60, '/', '', false, false);
         return AdminUser::dealInfo($user);;
+    }
+
+    public static function logout()
+    {
+        Cookie::queue(self::COOKIE_NAME, '', -1);
     }
 
     public static function getUserRoleId($uid)

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Support\Facades\DB;
-use App\Model\AdminAuth;
-use App\Model\AdminUser;
+use App\Models\AdminAuth;
+use App\Models\AdminUser;
 
 class Personal extends Base
 {

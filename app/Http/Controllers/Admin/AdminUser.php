@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Support\Facades\DB;
-use App\Model\AdminAuth;
+use App\Models\AdminAuth;
 use App\Lib\Util;
 
 class AdminUser extends Base

@@ -3,9 +3,11 @@ window.config.defaultIcon = 'layui-icon-circle'
 window.config.defaultTitle = '默认标题'
 window.config.tabMenuName = 'admin-TabMenu'
 window.config.powerItemName = 'admin-PowerList'
+window.config.localUserKey = 'adminUser'
 window.config.layIdName = 'admin-LayId'
 window.config.uploadImageUrl = '/admin/file/image'
 window.config.loginPage = './auth/login'
+window.config.logoutPage = './auth/logout'
 
 if(document.cookie.indexOf('admin_auth') === -1){
    window.location = window.config.loginPage
@@ -22,7 +24,11 @@ function getUrlParam(name) {
    if (r != null) return decodeURI(r[2]); return null
 }
 function getUserInfo(field) {
-   let info = JSON.parse(localStorage.getItem('adminUser'))
+   let info = JSON.parse(localStorage.getItem(window.config.localUserKey))
+   if (!info) {
+      window.location.href = window.config.loginPage
+      return false;
+   }
    return info[field] ? info[field] : ''
 }
 function initPower() {

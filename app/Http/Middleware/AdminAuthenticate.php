@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Lib\JWT;
-use App\Model\AdminAuth;
-use App\Model\AdminUser;
+use App\Models\AdminAuth;
+use App\Models\AdminUser;
 use Illuminate\Support\Facades\DB;
 
 class AdminAuthenticate
