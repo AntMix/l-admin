@@ -10,6 +10,7 @@ use Request;
 
 class AdminAuth
 {
+    protected $table = 'admin_auth';
     const SALT = 'adminSalt';
     const COOKIE_NAME = 'admin_auth';
     const LOGIN_PAGE = '/admin/auth/login';
