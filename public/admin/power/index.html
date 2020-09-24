@@ -39,7 +39,9 @@
 </script>
 <!-- 启用|停用模板 -->
 <script type="text/html" id="isMenuTpl">
+	{{# if(d.path != 0) { }}
 	<input type="checkbox" name="is_menu" value="{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="isMenuSwitch" {{ d.is_menu == 1 ? 'checked' : '' }}>
+	{{# } }}
 </script>
 <script type="text/html" id="statusTpl">
 	<input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="statusSwitch" {{ d.status == 1 ? 'checked' : '' }}>
