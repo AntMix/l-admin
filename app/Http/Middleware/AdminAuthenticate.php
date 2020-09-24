@@ -21,21 +21,21 @@ class AdminAuthenticate
     {
         $token = $request->cookie(AdminAuth::COOKIE_NAME);
         if (!$token) {
-            return redirect()->route('adminLogin');
+            return self::goLogin();
         }
         $info = JWT::verifyToken($token);
         if (isset($info['uid']) && $info['uid']) {
             $user = AdminUser::getNormalUser($info['uid']);
             if (!$user) {
-                return redirect()->route('adminLogin');
+                return self::goLogin();
             }
         } else {
-            return redirect()->route('adminLogin');
+            return self::goLogin();
         }
 
         $roleIds = AdminAuth::getUserRoleId($user['id']);
         if (!$roleIds) {
-            return redirect()->route('adminLogin');
+            return self::goLogin();
         }
         $powerId = DB::table('admin_power')->where([
             'path' => str_replace($request->route()->getPrefix() . '/', '', $request->path()),
@@ -48,5 +48,10 @@ class AdminAuthenticate
             }
         }
         return $next($request);
+    }
+
+    private static function goLogin()
+    {
+        return redirect()->route('adminLogin');
     }
 }
