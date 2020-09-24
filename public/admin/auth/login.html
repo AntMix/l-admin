@@ -1,150 +1,137 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="author" content="Kodinger">
-    <title>My Login Page &mdash; Bootstrap 4 Login Page Snippet</title>
-    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <script src="/static/js/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Login</title>
     <style>
-        html,
-        body {
-            height: 100%;
+        .login-page {
+            width: 360px;
+            padding: 8% 0 0;
+            margin: auto;
         }
 
-        body.my-login-page {
-            background-color: #f7f9fb;
+        .form {
+            position: relative;
+            z-index: 1;
+            background: #FFFFFF;
+            max-width: 360px;
+            margin: 0 auto 100px;
+            padding: 45px;
+            text-align: center;
+            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+        }
+
+        .form .input-text {
+            font-family: "Roboto", sans-serif;
+            outline: 0;
+            background: #f2f2f2;
+            width: 100%;
+            border: 0;
+            margin: 0 0 15px;
+            padding: 15px;
+            box-sizing: border-box;
             font-size: 14px;
         }
 
-        .my-login-page .brand {
-            width: 90px;
-            height: 90px;
-            overflow: hidden;
-            /* border-radius: 50%; */
-            margin: 0 auto;
-            margin: 40px auto;
-            /* box-shadow: 0 0 40px rgba(0, 0, 0, .05); */
+        .form input {
+            margin: 0 0 15px;
         }
 
-        .my-login-page .brand img {
+        .submit {
+            font-family: "Roboto", sans-serif;
+            outline: 0;
+            background: #4CAF50;
             width: 100%;
+            border: 0;
+            padding: 15px;
+            color: #FFFFFF;
+            font-size: 14px;
+            -webkit-transition: all 0.3 ease;
+            transition: all 0.3 ease;
+            cursor: pointer;
         }
 
-        .my-login-page .card-wrapper {
-            width: 400px;
+        .form .remember {
+            font-family: "Roboto", sans-serif;
+            font-size: 14px;
+            color: #43A047;
         }
 
-        .my-login-page .card {
-            border-color: transparent;
-            box-shadow: 0 0 40px rgba(0, 0, 0, .05);
+        .form button:hover,
+        .form button:active,
+        .form button:focus {
+            background: #43A047;
         }
 
-        .my-login-page .card.fat {
-            padding: 10px;
+        .form .message {
+            margin: 15px 0 0;
+            color: #b3b3b3;
+            font-size: 12px;
         }
 
-        .my-login-page .card .card-title {
-            margin-bottom: 30px;
+        .form .message a {
+            color: #4CAF50;
+            text-decoration: none;
         }
 
-        .my-login-page .form-control {
-            border-width: 2.3px;
+        .form .register-form {
+            display: none;
         }
 
-        .my-login-page .form-group label {
-            width: 100%;
-        }
-
-        .my-login-page .btn.btn-block {
-            padding: 12px 10px;
-        }
-
-        .my-login-page .margin-top20 {
-            margin-top: 20px;
-        }
-
-        .my-login-page .no-margin {
-            margin: 0;
-        }
-
-        .my-login-page .footer {
-            margin: 40px 0;
-            color: #888;
-            text-align: center;
+        body {
+            background: #76b852;
+            /* fallback for old browsers */
+            background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+            background: -moz-linear-gradient(right, #76b852, #8DC26F);
+            background: -o-linear-gradient(right, #76b852, #8DC26F);
+            background: linear-gradient(to left, #76b852, #8DC26F);
+            font-family: "Roboto", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
     </style>
 </head>
 
-<body class="my-login-page">
-    <section class="h-100">
-        <div class="container h-100">
-            <div class="row justify-content-md-center h-100">
-                <div class="card-wrapper">
-                    <div class="brand">
-                        <!-- <img src="img/logo.jpg"> -->
-                    </div>
-                    <div class="card fat">
-                        <div class="card-body">
-                            <h4 class="card-title">Login</h4>
-                            <div>
-                                <div class="form-group">
-                                    <label for="email">Username</label>
-
-                                    <input id="name" type="email" class="form-control" name="name" value="" required
-                                        autofocus>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="password">Password
-                                        <!-- <a href="forgot.html" class="float-right">
-                                            Forgot Password?
-                                        </a> -->
-                                    </label>
-                                    <input id="password" type="password" class="form-control" name="password" required
-                                        data-eye>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>
-                                        <input type="checkbox" id="remember" name="remember"> Remember Me In Next 7 days
-                                    </label>
-                                </div>
-
-                                <div class="form-group no-margin">
-                                    <button id="submit" class="btn btn-primary btn-block">
-                                        Login
-                                    </button>
-                                </div>
-                                <!-- <div class="margin-top20 text-center">
-                                    Don't have an account? <a href="register.html">Create One</a>
-                                </div> -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <!-- Copyright &copy; Your Company 2020 -->
-                    </div>
-                </div>
+<body>
+    <div class="login-page">
+        <div class="form">
+            <!-- <div class="register-form">
+                <input type="text" class="input-text" placeholder="Username" />
+                <input type="password" class="input-text" placeholder="Password" />
+                <input type="text" class="input-text" placeholder="Email Address" />
+                <button class="submit" id="register">Sign Up</button>
+                <p class="message">Already registered? <a href="#">Sign In</a></p>
+            </div> -->
+            <div class="login-form">
+                <input type="text" class="input-text" id="name" placeholder="Username" />
+                <input type="password" class="input-text" id="password" placeholder="Password" />
+                <input type="checkbox" id="remember" name="remember">
+                <span class="remember">Remember Me In Next 7 days</span>
+                <button class="submit" id="login">LOGIN</button>
+                <!-- <p class="message">Not registered? <a href="#">Create an account</a></p> -->
             </div>
         </div>
-    </section>
+    </div>
+    <script src='/static/js/jquery.min.js'></script>
+    <script>
+        // $('.message a').click(function () {
+        //     $('form').animate({ height: "toggle", opacity: "toggle" }, "slow");
+        // });
+        document.getElementById('login').addEventListener('click', () => {
+            let name = document.getElementById('name').value
+            let password = document.getElementById('password').value
+            let remember = document.getElementById('remember').checked
+            $.post('./doLogin', { name: name, password: password, remember: remember }, (res) => {
+                if (res.code !== 0) {
+                    alert(res.msg)
+                    return
+                }
+                localStorage.setItem('adminUser', JSON.stringify(res.data.user))
+                window.location.href = res.data.link
+            }, 'json');
+        })
+    </script>
 </body>
-<script>
-    document.getElementById('submit').addEventListener('click', () => {
-        let name = document.getElementById('name').value
-        let password = document.getElementById('password').value
-        let remember = document.getElementById('remember').checked
-        $.post('./doLogin', {name : name, password : password, remember : remember}, (res) => {
-            if (res.code !== 0) {
-                alert(res.msg)
-                return
-            }
-            localStorage.setItem('adminUser', JSON.stringify(res.data.user))
-            window.location.href = res.data.link
-        }, 'json');
-    })
-</script>
 
 </html>
